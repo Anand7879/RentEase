@@ -22,7 +22,7 @@ const AllUsers = () => {
   const getAllUser = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8001/api/admin/getallusers"
+        "https://rentease-d3zn.onrender.com/api/admin/getallusers"
       );
       if (response.data.success) {
         setAllUser(response.data.data);
@@ -44,7 +44,7 @@ const AllUsers = () => {
   const handleStatus = async (userid, status) => {
     try {
       const res = await axios.post(
-        "http://localhost:8001/api/admin/handlestatus",
+        "https://rentease-d3zn.onrender.com/api/admin/handlestatus",
         { userid, status }
       );
 

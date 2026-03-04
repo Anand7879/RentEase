@@ -52,7 +52,7 @@ function AddProperty() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8001/api/owner/postproperty",
+        "https://rentease-d3zn.onrender.com/api/owner/postproperty",
         formData,
         { withCredentials: true }
       );

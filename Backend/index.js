@@ -1,7 +1,5 @@
 const dotenv = require("dotenv");
-dotenv.config(); // FIX: dotenv.config() SABSE PEHLE — before any other imports
-                 // that might use process.env (routes, middleware, DB config)
-
+dotenv.config(); 
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -15,7 +13,7 @@ const PORT = process.env.PORT || 8001;
 app.use(express.json());
 app.use(cors({
   origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // FIX: PATCH missing — needed for updateProperty
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
   credentials: true,
 }));
 app.use(cookieParser());

@@ -42,7 +42,7 @@ const Login = () => {
       return showToast("error", "Please fill all fields");
     }
     try {
-      const res = await axios.post("http://localhost:8001/api/user/login", data, { withCredentials: true });
+      const res = await axios.post("https://rentease-d3zn.onrender.com/api/user/login", data, { withCredentials: true });
       if (res.data.success) {
         showToast("success", res.data.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -76,7 +76,7 @@ const Login = () => {
       return showToast("error", "Please fill all fields");
     }
     try {
-      const response = await axios.post("http://localhost:8001/api/user/register", regData, { withCredentials: true });
+      const response = await axios.post("https://rentease-d3zn.onrender.com/api/user/register", regData, { withCredentials: true });
       if (response.data.success) {
         showToast("success", response.data.message);
         setTimeout(() => setToggled(false), 1000);

@@ -11,7 +11,7 @@ const OwnerAllBookings = () => {
  const getAllProperty = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8001/api/owner/getallbookings",
+        "https://rentease-d3zn.onrender.com/api/owner/getallbookings",
         { withCredentials: true }
       );
 
@@ -39,7 +39,7 @@ const OwnerAllBookings = () => {
   const handleStatus = async (bookingId, propertyId, status) => {
     try {
       const res = await axios.post(
-        "http://localhost:8001/api/owner/handlebookingstatus",
+        "https://rentease-d3zn.onrender.com/api/owner/handlebookingstatus",
         { bookingId, propertyId, status },
         { withCredentials: true }
       );

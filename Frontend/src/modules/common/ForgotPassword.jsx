@@ -32,7 +32,7 @@ const ForgotPassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8001/api/user/forgotpassword",
+        "https://rentease-d3zn.onrender.com/api/user/forgotpassword",
         data,
         { withCredentials: true }
       );
