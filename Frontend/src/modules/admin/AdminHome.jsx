@@ -25,7 +25,7 @@ const AdminHome = () => {
   const handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/adminlogin");
+    navigate("/");
   };
 
   // localStorage se user lo agar context mein nahi hai
