@@ -72,11 +72,11 @@ const loginController = async (req, res) => {
     delete userObj.password;
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // FIX 5: was hardcoded false
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+  httpOnly: true,
+  secure: true,        // ← hamesha true
+  sameSite: "none",    // ← "strict" se "none" karo
+  maxAge: 24 * 60 * 60 * 1000,
+});
 
     return res.status(200).send({
       message: "Login successful",
