@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
+import Toast from "../common/Toast";
 import { useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
 const AdminAllBookings = () => {
   const [allBookings, setAllBookings] = useState([]);
+  const [toast, setToast] = useState({ show: false, type: "", message: "" });
   const navigate = useNavigate();
+
+  const showToast = (type, message) => {
+    setToast({ show: true, type, message });
+  };
 
   const getAllBooking = async () => {
     try {
@@ -19,20 +24,19 @@ const AdminAllBookings = () => {
       if (response.data.success) {
         setAllBookings(response.data.data);
       } else {
-        message.error(response.data.message || "Unauthorized access");
-        navigate("/login"); 
+        showToast("error", response.data.message || "Unauthorized access");
+        navigate("/login");
       }
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 401) {
-        message.error("Session expired, please login again");
+        showToast("error", "Session expired, please login again");
         navigate("/login");
       } else {
-        message.error("Failed to fetch bookings");
+        showToast("error", "Failed to fetch bookings");
       }
     }
   };
-
 
   useEffect(() => {
     getAllBooking();
@@ -40,6 +44,13 @@ const AdminAllBookings = () => {
 
   return (
     <div className="overflow-x-auto mt-6">
+      {toast.show && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
       <table className="min-w-full border border-gray-700 bg-gray-900/80 backdrop-blur-md shadow-2xl rounded-xl overflow-hidden">
         <thead className="bg-indigo-600/80 text-white">
           <tr>
@@ -57,34 +68,24 @@ const AdminAllBookings = () => {
             allBookings.map((booking, index) => (
               <tr
                 key={booking._id}
-                className={`transition duration-200 ${index % 2 === 0 ? "bg-gray-800/60" : "bg-gray-900/60"
-                  } hover:bg-indigo-500/20`}
+                className={`transition duration-200 ${
+                  index % 2 === 0 ? "bg-gray-800/60" : "bg-gray-900/60"
+                } hover:bg-indigo-500/20`}
               >
-                <td className="py-2 px-4 border-b border-gray-700 text-gray-200">
-                  {booking._id}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">
-                  {booking.ownerID}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-700 text-center text-indigo-400 font-medium">
-                  {booking.propertyId}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">
-                  {booking.userID}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">
-                  {booking.userName}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">
-                  {booking.phone}
-                </td>
+                <td className="py-2 px-4 border-b border-gray-700 text-gray-200">{booking._id}</td>
+                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">{booking.ownerID}</td>
+                <td className="py-2 px-4 border-b border-gray-700 text-center text-indigo-400 font-medium">{booking.propertyId}</td>
+                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">{booking.userID}</td>
+                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">{booking.userName}</td>
+                <td className="py-2 px-4 border-b border-gray-700 text-center text-gray-300">{booking.phone}</td>
                 <td
-                  className={`py-2 px-4 border-b border-gray-700 text-center font-semibold ${booking.bookingStatus === "Confirmed"
+                  className={`py-2 px-4 border-b border-gray-700 text-center font-semibold ${
+                    booking.bookingStatus === "Confirmed"
                       ? "text-green-400"
                       : booking.bookingStatus === "Pending"
-                        ? "text-yellow-400"
-                        : "text-red-400"
-                    }`}
+                      ? "text-yellow-400"
+                      : "text-red-400"
+                  }`}
                 >
                   {booking.bookingStatus}
                 </td>
@@ -92,10 +93,7 @@ const AdminAllBookings = () => {
             ))
           ) : (
             <tr>
-              <td
-                colSpan="7"
-                className="text-center py-6 text-gray-400 font-medium italic"
-              >
+              <td colSpan="7" className="text-center py-6 text-gray-400 font-medium italic">
                 No bookings found
               </td>
             </tr>
