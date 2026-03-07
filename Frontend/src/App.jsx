@@ -4,6 +4,7 @@ import Login from "./modules/common/Login";
 import Register from "./modules/common/Register";
 import ForgotPassword from "./modules/common/ForgotPassword";
 import AdminHome from "./modules/admin/AdminHome";
+import AdminLogin from "./modules/admin/AdminLogin";
 import OwnerHome from "./modules/user/owner/OwnerHome";
 import RenterHome from "./modules/user/renter/RenterHome";
 import AllUsers from "./modules/admin/AllUsers";
@@ -36,30 +37,31 @@ function App() {
   }, []);
 
   return (
-     <UserContext.Provider value={{ userData, setUserData, userLoggedIn, setUserLoggedIn }}>
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/forgotpassword' element={<ForgotPassword />} />
-          <Route path='/adminhome' element={<AdminHome />} />
-          <Route path='/ownerhome' element={<OwnerHome />} />
-          <Route path='/renterhome' element={<RenterHome />} />
-          <Route path='/getallbookings' element={<AdminAllBookings />} />
-          <Route path='/getallproperties' element={<AdminAllProperty />} />
-          <Route path='/getallusers' element={<AllUsers />} />
-          <Route path='/postproperty' element={<AddProperty />} />
-          <Route path='/getallbookings' element={<OwnerAllBookings />} />
-          <Route path='/getallproperties' element={<OwnerAllProperties />} />
-          <Route path='/getallbookings' element={<RenterAllProperty />} />
-          <Route path='/getAllProperties' element={<AllPropertiesCards />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <UserContext.Provider value={{ userData, setUserData, userLoggedIn, setUserLoggedIn }}>
+      <div>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/forgotpassword' element={<ForgotPassword />} />
+            <Route path='/adminlogin' element={<AdminLogin />} />
+            <Route path='/adminhome' element={<AdminHome />} />
+            <Route path='/ownerhome' element={<OwnerHome />} />
+            <Route path='/renterhome' element={<RenterHome />} />
+            <Route path='/getallbookings' element={<AdminAllBookings />} />
+            <Route path='/getallproperties' element={<AdminAllProperty />} />
+            <Route path='/getallusers' element={<AllUsers />} />
+            <Route path='/postproperty' element={<AddProperty />} />
+            <Route path='/getallbookings' element={<OwnerAllBookings />} />
+            <Route path='/getallproperties' element={<OwnerAllProperties />} />
+            <Route path='/getallbookings' element={<RenterAllProperty />} />
+            <Route path='/getAllProperties' element={<AllPropertiesCards />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </UserContext.Provider>
-  )
+  );
 }
 
-export default App
+export default App;
