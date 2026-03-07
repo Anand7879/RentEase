@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
+import Toast from "../common/Toast";
 import { useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
 const AdminAllProperty = () => {
   const [allProperties, setAllProperties] = useState([]);
+  const [toast, setToast] = useState({ show: false, type: "", message: "" });
   const navigate = useNavigate();
+
+  const showToast = (type, message) => {
+    setToast({ show: true, type, message });
+  };
 
   const getAllProperty = async () => {
     try {
@@ -19,16 +24,16 @@ const AdminAllProperty = () => {
       if (response.data.success) {
         setAllProperties(response.data.data);
       } else {
-        message.error(response.data.message || "Unauthorized access");
+        showToast("error", response.data.message || "Unauthorized access");
         navigate("/login");
       }
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 401) {
-        message.error("Session expired, please login again");
+        showToast("error", "Session expired, please login again");
         navigate("/login");
       } else {
-        message.error("Failed to fetch Property");
+        showToast("error", "Failed to fetch Property");
       }
     }
   };
@@ -39,6 +44,14 @@ const AdminAllProperty = () => {
 
   return (
     <div className="overflow-x-auto mt-6">
+      {toast.show && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
+
       <table className="min-w-full border border-gray-700 bg-gray-900/80 backdrop-blur-md shadow-2xl rounded-xl overflow-hidden">
         <thead className="bg-indigo-600/80 text-white">
           <tr>
@@ -56,8 +69,9 @@ const AdminAllProperty = () => {
             allProperties.map((property, index) => (
               <tr
                 key={property._id}
-                className={`transition duration-200 ${index % 2 === 0 ? "bg-gray-800/60" : "bg-gray-900/60"
-                  } hover:bg-indigo-500/20`}
+                className={`transition duration-200 ${
+                  index % 2 === 0 ? "bg-gray-800/60" : "bg-gray-900/60"
+                } hover:bg-indigo-500/20`}
               >
                 <td className="py-2 px-4 border-b border-gray-700 text-gray-200">
                   {property._id}
