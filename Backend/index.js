@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8001;
 
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://hunthouse.netlify.app"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
   credentials: true,
 }));

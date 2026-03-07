@@ -11,16 +11,16 @@ const Toast = ({ type, message, onClose }) => {
 
   return (
     <div
-      className={`fixed top-5 right-5 z-[9999] flex items-center gap-3 px-5 py-3 rounded-lg shadow-xl border backdrop-blur-md animate-slideIn
+      className={`fixed top-5 right-5 z-9999 flex items-center gap-3 px-5 py-3 rounded-lg shadow-xl border backdrop-blur-md animate-slideIn
         ${isSuccess
           ? "bg-green-500/20 border-green-500/40 text-green-300"
           : "bg-red-500/20 border-red-500/40 text-red-300"
         }`}
     >
       {isSuccess ? (
-        <CheckCircleIcon className="h-6 w-6 flex-shrink-0" />
+        <CheckCircleIcon className="h-6 w-6 shrink-0" />
       ) : (
-        <XCircleIcon className="h-6 w-6 flex-shrink-0" />
+        <XCircleIcon className="h-6 w-6 shrink-0" />
       )}
       <span className="font-medium">{message}</span>
 
