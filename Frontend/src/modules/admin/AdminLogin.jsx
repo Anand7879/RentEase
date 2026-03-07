@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Toast from "../common/Toast"
+import Toast from "../common/Toast";
+import { UserContext } from "../../App";
 
 axios.defaults.withCredentials = true;
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { setUserData, setUserLoggedIn } = useContext(UserContext);
   const [data, setData] = useState({ email: "", password: "" });
   const [toast, setToast] = useState({ show: false, type: "", message: "" });
 
@@ -36,6 +38,8 @@ const AdminLogin = () => {
           return showToast("error", "Access denied. Admins only.");
         }
         localStorage.setItem("user", JSON.stringify(user));
+        setUserData(user);
+        setUserLoggedIn(true);
         showToast("success", "Welcome Admin!");
         setTimeout(() => navigate("/adminhome"), 1000);
       } else {
