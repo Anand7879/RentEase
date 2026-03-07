@@ -31,7 +31,7 @@ const RenterHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+    <div className="min-h-screen bg-linear-to-br from-gray-800 via-gray-900 to-black">
       {/* Navbar */}
       <nav className="bg-black/30 backdrop-blur-lg shadow-md px-6 py-4 flex items-center justify-between">
         <h2 className="text-3xl font-extrabold text-indigo-400 tracking-wide">RentEase</h2>

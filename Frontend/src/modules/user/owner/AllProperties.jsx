@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Toast from "../common/Toast";
+import Toast from "../../common/Toast"
 import { useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;

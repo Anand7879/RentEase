@@ -26,7 +26,7 @@ const OwnerHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-br from-gray-800 via-gray-900 to-black text-white">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-black/30 backdrop-blur-lg shadow-md border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">

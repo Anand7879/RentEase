@@ -19,7 +19,7 @@ const AdminHome = () => {
 if (!user || !user.userData) return null;
 
   return (
-<div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black flex flex-col">
+<div className="min-h-screen bg-linear-to-br from-gray-800 via-gray-900 to-black flex flex-col">
   {/* Navbar */}
   <nav className="fixed top-0 left-0 w-full z-50 bg-black/30 backdrop-blur-lg shadow-md py-4 px-8 flex justify-between items-center">
     <h2 className="text-3xl font-extrabold text-indigo-400 tracking-wide">RentEase</h2>
