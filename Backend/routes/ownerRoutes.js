@@ -1,9 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const cloudinary = require("cloudinary");
-// ✅ FIX: v1 uses default export, v2+ uses named export — support both
-const cloudinaryStorageModule = require("multer-storage-cloudinary");
-const CloudinaryStorage = cloudinaryStorageModule.CloudinaryStorage || cloudinaryStorageModule;
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const {
   addPropertyController,
@@ -17,7 +15,7 @@ const {
 const router = express.Router();
 
 // ── Cloudinary Config ──
-cloudinary.v2.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
@@ -25,7 +23,7 @@ cloudinary.v2.config({
 
 // ── Multer + Cloudinary Storage ──
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary.v2,
+  cloudinary: cloudinary,
   params: {
     folder: "rentease-properties",
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
