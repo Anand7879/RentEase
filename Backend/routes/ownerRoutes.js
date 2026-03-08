@@ -1,7 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary"); // ✅ FIX 3: correct named import
+// ✅ FIX: v1 uses default export, v2+ uses named export — support both
+const cloudinaryStorageModule = require("multer-storage-cloudinary");
+const CloudinaryStorage = cloudinaryStorageModule.CloudinaryStorage || cloudinaryStorageModule;
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const {
   addPropertyController,
