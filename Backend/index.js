@@ -33,7 +33,7 @@ const corsOptions = {
 
 // ✅ FIX: Express + path-to-regexp v8 no longer accepts bare "*" as a wildcard.
 //         Use "(.*)" instead — this fixes the "Missing parameter name" crash.
-app.options("(.*)", cors(corsOptions));
+// cors() with preflightContinue: false handles OPTIONS automatically — no app.options() needed
 app.use(cors(corsOptions));
 
 app.use(express.json());
