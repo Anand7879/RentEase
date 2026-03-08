@@ -13,15 +13,14 @@ const Login = () => {
   const [toast, setToast] = useState({ show: false, type: "", message: "" });
   const [toggled, setToggled] = useState(false);
 
-  // Auto-toggle to register if navigated from /register
   useEffect(() => {
     if (location.state?.showRegister) {
       setToggled(true);
     }
   }, [location.state]);
 
-  // Register form state
-  const [regData, setRegData] = useState({ name: "", email: "", password: "", type: "", confirmPassword: "" });
+  // ✅ FIX: removed confirmPassword from initial state since there's no confirmPassword input in the form
+  const [regData, setRegData] = useState({ name: "", email: "", password: "", type: "" });
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
@@ -73,14 +72,12 @@ const Login = () => {
 
   const handleRegSubmit = async (e) => {
     e.preventDefault();
-    if (!regData.name || !regData.email || !regData.password || !regData.confirmPassword || !regData.type) {
+    // ✅ FIX: removed confirmPassword check — no such field exists in the form
+    if (!regData.name || !regData.email || !regData.password || !regData.type) {
       return showToast("error", "Please fill all fields");
     }
-    if (regData.password !== regData.confirmPassword) {
-      return showToast("error", "Passwords do not match");
-    }
     try {
-      const response = await axios.post(`${API_ENDPOINTS.USER_REGISTER}`, { 
+      const response = await axios.post(`${API_ENDPOINTS.USER_REGISTER}`, {
         name: regData.name,
         email: regData.email,
         password: regData.password,
@@ -127,7 +124,6 @@ const Login = () => {
           border-radius: 4px;
         }
 
-        /* --- BACKGROUND SHAPES --- */
         .background-shape {
           position: absolute;
           right: 0;
@@ -163,7 +159,6 @@ const Login = () => {
           transition-delay: 1.2s;
         }
 
-        /* --- CREDENTIALS PANEL --- */
         .credentials-panel {
           position: absolute;
           top: 0;
@@ -182,7 +177,6 @@ const Login = () => {
           color: #fff;
         }
 
-        /* --- SIGNIN SLIDE ELEMENTS --- */
         .credentials-panel.signin .slide-element {
           transform: translateX(0%);
           transition: 0.7s;
@@ -204,7 +198,6 @@ const Login = () => {
         .auth-wrapper.toggled .credentials-panel.signin .slide-element:nth-child(4) { transition-delay: 0.3s; }
         .auth-wrapper.toggled .credentials-panel.signin .slide-element:nth-child(5) { transition-delay: 0.4s; }
 
-        /* --- SIGNUP SLIDE ELEMENTS --- */
         .credentials-panel.signup .slide-element {
           transform: translateX(120%);
           transition: 0.7s ease;
@@ -232,7 +225,6 @@ const Login = () => {
         .auth-wrapper.toggled .credentials-panel.signup .slide-element:nth-child(6) { transition-delay: 2.1s; }
         .auth-wrapper.toggled .credentials-panel.signup .slide-element:nth-child(7) { transition-delay: 2.2s; }
 
-        /* --- FIELD WRAPPER --- */
         .field-wrapper {
           position: relative;
           width: 100%;
@@ -286,7 +278,6 @@ const Login = () => {
         .field-wrapper input:focus ~ i,
         .field-wrapper input:valid ~ i { color: #818cf8; }
 
-        /* --- SUBMIT BUTTON --- */
         .submit-button {
           position: relative;
           width: 100%;
@@ -316,7 +307,6 @@ const Login = () => {
         }
         .submit-button:hover::before { top: 0; }
 
-        /* --- SWITCH LINK --- */
         .switch-link {
           font-size: 13px;
           text-align: center;
@@ -330,7 +320,6 @@ const Login = () => {
         }
         .switch-link a:hover { text-decoration: underline; }
 
-        /* --- WELCOME SECTION --- */
         .welcome-section {
           position: absolute;
           top: 0;
@@ -392,7 +381,6 @@ const Login = () => {
           color: #fff;
         }
 
-        /* --- FOOTER --- */
         .auth-footer {
           margin-top: 30px;
           text-align: center;
@@ -406,7 +394,6 @@ const Login = () => {
         }
         .auth-footer a:hover { text-decoration: underline; color: #a5b4fc; }
 
-        /* --- MOBILE --- */
         @media (max-width: 768px) {
           .auth-wrapper { height: auto; min-height: 500px; }
           .credentials-panel, .welcome-section { width: 100%; position: relative; }
@@ -446,13 +433,13 @@ const Login = () => {
             <h2 className="slide-element">Login</h2>
             <form onSubmit={handleSubmit}>
               <div className="field-wrapper slide-element">
-                <input type="email" name="email" value={data.email} onChange={handleChange} required />
+                <input type="email" name="email" value={data.email} onChange={handleChange} required autoComplete="email" />
                 <label>Email Address</label>
                 <i className="fa-solid fa-envelope"></i>
               </div>
 
               <div className="field-wrapper slide-element">
-                <input type="password" name="password" value={data.password} onChange={handleChange} required />
+                <input type="password" name="password" value={data.password} onChange={handleChange} required autoComplete="current-password" />
                 <label>Password</label>
                 <i className="fa-solid fa-lock"></i>
               </div>
@@ -470,10 +457,7 @@ const Login = () => {
               <div className="switch-link slide-element">
                 <p>
                   Don't have an account?{" "}
-                  <a
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); setToggled(true); }}
-                  >
+                  <a href="#" onClick={(e) => { e.preventDefault(); setToggled(true); }}>
                     Sign Up
                   </a>
                 </p>
@@ -491,26 +475,25 @@ const Login = () => {
             <h2 className="slide-element">Register</h2>
             <form onSubmit={handleRegSubmit}>
               <div className="field-wrapper slide-element">
-                <input type="text" name="name" value={regData.name} onChange={handleRegChange} required />
+                <input type="text" name="name" value={regData.name} onChange={handleRegChange} required autoComplete="name" />
                 <label>Full Name</label>
                 <i className="fa-solid fa-user"></i>
               </div>
 
               <div className="field-wrapper slide-element">
-                <input type="email" name="email" value={regData.email} onChange={handleRegChange} required />
+                <input type="email" name="email" value={regData.email} onChange={handleRegChange} required autoComplete="email" />
                 <label>Email Address</label>
                 <i className="fa-solid fa-envelope"></i>
               </div>
 
               <div className="field-wrapper slide-element">
-                <input type="password" name="password" value={regData.password} onChange={handleRegChange} required />
+                <input type="password" name="password" value={regData.password} onChange={handleRegChange} required autoComplete="new-password" />
                 <label>Password</label>
                 <i className="fa-solid fa-lock"></i>
               </div>
 
               <div className="field-wrapper slide-element" style={{ height: "50px" }}>
-                <select name="type" value={regData.type} onChange={handleRegChange} required
-                  style={{ paddingTop: "15px" }}>
+                <select name="type" value={regData.type} onChange={handleRegChange} required style={{ paddingTop: "15px" }}>
                   <option value="" disabled>Select User Type</option>
                   <option value="Renter">Renter</option>
                   <option value="Owner">Owner</option>
@@ -524,10 +507,7 @@ const Login = () => {
               <div className="switch-link slide-element">
                 <p>
                   Already have an account?{" "}
-                  <a
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); setToggled(false); }}
-                  >
+                  <a href="#" onClick={(e) => { e.preventDefault(); setToggled(false); }}>
                     Sign In
                   </a>
                 </p>
