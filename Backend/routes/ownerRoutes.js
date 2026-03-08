@@ -1,8 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const multerStorageCloudinary = require("multer-storage-cloudinary");
-const CloudinaryStorage = multerStorageCloudinary.CloudinaryStorage || multerStorageCloudinary;
+const cloudinary = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const {
   addPropertyController,
@@ -16,7 +15,7 @@ const {
 const router = express.Router();
 
 // ── Cloudinary Config ──
-cloudinary.config({
+cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
@@ -24,7 +23,7 @@ cloudinary.config({
 
 // ── Multer + Cloudinary Storage ──
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary: cloudinary.v2,
   params: {
     folder: "rentease-properties",
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
