@@ -7,16 +7,15 @@ const addPropertyController = async (req, res) => {
   try {
     let images = [];
     if (req.files && req.files.length > 0) {
+      // Cloudinary returns secure_url and public_id instead of local path
       images = req.files.map((file) => ({
         filename: file.filename,
-        path: `/uploads/${file.filename}`,
+        path: file.path,           // ← Cloudinary secure_url
+        public_id: file.filename,  // ← Cloudinary public_id
       }));
     }
 
-    // FIX 1: findById({_id: id}) is wrong syntax — just pass id directly
     const user = await userSchema.findById(req.body.userId);
-
-    // FIX 2: no null check on user — crashes with "Cannot read properties of null"
     if (!user) {
       return res.status(404).send({ success: false, message: "Owner user not found" });
     }
@@ -34,7 +33,6 @@ const addPropertyController = async (req, res) => {
     return res.status(200).send({ success: true, message: "New Property has been stored" });
   } catch (error) {
     console.log("AddProperty error:", error);
-    // FIX 3: catch block had no res.send() — server would hang with no response
     return res.status(500).send({ success: false, message: error.message });
   }
 };
@@ -43,14 +41,10 @@ const addPropertyController = async (req, res) => {
 const getAllOwnerPropertiesController = async (req, res) => {
   const { userId } = req.body;
   try {
-    // FIX 4: validate userId
     if (!userId) {
       return res.status(400).send({ message: "userId is required", success: false });
     }
-
-    // FIX 5: was fetching ALL properties then filtering in JS memory — inefficient
     const ownerProperties = await propertySchema.find({ ownerId: userId });
-
     return res.status(200).send({ success: true, data: ownerProperties });
   } catch (error) {
     console.error("GetOwnerProperties error:", error);
@@ -62,14 +56,10 @@ const getAllOwnerPropertiesController = async (req, res) => {
 const deletePropertyController = async (req, res) => {
   const propertyId = req.params.propertyid;
   try {
-    // FIX 6: findByIdAndDelete({_id: id}) is wrong — pass id directly
     const deleted = await propertySchema.findByIdAndDelete(propertyId);
-
-    // FIX 7: no check if property actually existed before deleting
     if (!deleted) {
       return res.status(404).send({ success: false, message: "Property not found" });
     }
-
     return res.status(200).send({ success: true, message: "The property is deleted" });
   } catch (error) {
     console.error("DeleteProperty error:", error);
@@ -85,14 +75,23 @@ const updatePropertyController = async (req, res) => {
       return res.status(400).send({ success: false, message: "Property ID is required" });
     }
 
-    // FIX 8: findByIdAndUpdate({_id: id}, ...) — pass id directly
+    const updateData = { ...req.body, ownerId: req.body.userId };
+
+    // Agar nai image upload ki hai toh Cloudinary path use karo
+    if (req.file) {
+      updateData.propertyImage = [{
+        filename: req.file.filename,
+        path: req.file.path,       // ← Cloudinary secure_url
+        public_id: req.file.filename,
+      }];
+    }
+
     const property = await propertySchema.findByIdAndUpdate(
       propertyid,
-      { ...req.body, ownerId: req.body.userId },
+      updateData,
       { new: true }
     );
 
-    // FIX 9: no check if property was found
     if (!property) {
       return res.status(404).send({ success: false, message: "Property not found" });
     }
@@ -110,10 +109,7 @@ const getAllBookingsController = async (req, res) => {
     if (!userId) {
       return res.status(400).send({ message: "userId is required", success: false });
     }
-
-    // FIX 10: was fetching ALL bookings then filtering in JS memory — inefficient
     const ownerBookings = await bookingSchema.find({ ownerID: userId });
-
     return res.status(200).send({ success: true, data: ownerBookings });
   } catch (error) {
     console.error("GetOwnerBookings error:", error);
@@ -125,12 +121,10 @@ const getAllBookingsController = async (req, res) => {
 const handleAllBookingstatusController = async (req, res) => {
   const { bookingId, propertyId, status } = req.body;
   try {
-    // FIX 11: no validation — missing fields cause silent failures
     if (!bookingId || !propertyId || !status) {
       return res.status(400).send({ success: false, message: "bookingId, propertyId and status are required" });
     }
 
-    // FIX 12: findByIdAndUpdate({_id: id}, ...) — pass id directly
     const booking = await bookingSchema.findByIdAndUpdate(
       bookingId,
       { bookingStatus: status },

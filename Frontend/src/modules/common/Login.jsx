@@ -533,7 +533,7 @@ const Login = () => {
         </div>
 
         <div className="auth-footer">
-          <p>Made with ❤️ by <a href="#" target="_blank" rel="noreferrer">RentEase</a></p>
+          <p>Made with ❤️ by <Link to="/" rel="noreferrer">RentEase</Link></p>
         </div>
       </div>
     </>

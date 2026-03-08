@@ -130,7 +130,7 @@ const AllPropertiesCards = ({ loggedIn }) => {
               className="bg-gray-800/70 border border-gray-700 rounded-lg shadow-lg hover:shadow-indigo-600/40 transition transform hover:-translate-y-1 overflow-hidden"
             >
               <img
-                src={`https://rentease-d3zn.onrender.com${property.propertyImage[0]?.path}`}
+                src={property.propertyImage[0]?.path}
                 alt="Property"
                 className="w-full h-40 object-cover"
               />
@@ -188,7 +188,7 @@ const AllPropertiesCards = ({ loggedIn }) => {
             </button>
             <h3 className="text-xl font-bold mb-4 text-white">Property Info</h3>
             <img
-              src={`https://rentease-d3zn.onrender.com${selectedProperty.propertyImage[0]?.path}`}
+              src={selectedProperty.propertyImage[0]?.path}
               alt="Property"
               className="w-full h-48 object-cover rounded mb-4"
             />
