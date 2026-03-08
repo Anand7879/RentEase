@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toast from "../common/Toast";
 import { UserContext } from "../../App";
+import API_ENDPOINTS from "../../config/apiConfig";
 
 axios.defaults.withCredentials = true;
 
@@ -28,7 +29,7 @@ const AdminLogin = () => {
     }
     try {
       const res = await axios.post(
-        "https://rentease-d3zn.onrender.com/api/user/login",
+        API_ENDPOINTS.USER_LOGIN,
         data,
         { withCredentials: true }
       );

@@ -44,7 +44,7 @@ const OwnerAllBookings = () => {
   const handleStatus = async (bookingId, propertyId, status) => {
     try {
       const res = await axios.post(
-        "https://rentease-d3zn.onrender.com/api/owner/handlebookingstatus",
+        API_ENDPOINTS.OWNER_HANDLE_BOOKING_STATUS,
         { bookingId, propertyId, status },
         { withCredentials: true }
       );

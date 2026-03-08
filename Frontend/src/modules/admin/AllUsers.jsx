@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Toast from "../common/Toast"
 import { useNavigate } from "react-router-dom";
+import API_ENDPOINTS from "../../config/apiConfig";
 
 axios.defaults.withCredentials = true;
 
@@ -44,7 +45,7 @@ const AllUsers = () => {
   const handleStatus = async (userid, status) => {
     try {
       const res = await axios.post(
-        "https://rentease-d3zn.onrender.com/api/admin/handlestatus",
+        API_ENDPOINTS.ADMIN_HANDLE_STATUS,
         { userid, status },
         { withCredentials: true }  // ← Fix 1: added
       );

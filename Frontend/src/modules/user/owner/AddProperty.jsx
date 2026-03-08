@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Toast from "../../common/Toast"
 import { useNavigate } from "react-router-dom";
+import API_ENDPOINTS from "../../../config/apiConfig";
 
 axios.defaults.withCredentials = true;
 
@@ -54,7 +55,7 @@ function AddProperty() {
 
     try {
       const res = await axios.post(
-        "https://rentease-d3zn.onrender.com/api/owner/postproperty",
+        API_ENDPOINTS.OWNER_POST_PROPERTY,
         formData,
         { withCredentials: true }
       );

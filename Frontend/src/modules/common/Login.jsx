@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Toast from "../common/Toast";
+import API_ENDPOINTS from "../../config/apiConfig";
 
 axios.defaults.withCredentials = true;
 
@@ -20,7 +21,7 @@ const Login = () => {
   }, [location.state]);
 
   // Register form state
-  const [regData, setRegData] = useState({ name: "", email: "", password: "", type: "" });
+  const [regData, setRegData] = useState({ name: "", email: "", password: "", type: "", confirmPassword: "" });
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
@@ -42,20 +43,20 @@ const Login = () => {
       return showToast("error", "Please fill all fields");
     }
     try {
-      const res = await axios.post("https://rentease-d3zn.onrender.com/api/user/login", data, { withCredentials: true });
+      const res = await axios.post(`${API_ENDPOINTS.USER_LOGIN}`, data, { withCredentials: true });
       if (res.data.success) {
         showToast("success", res.data.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         const user = res.data.user;
         setTimeout(() => {
           switch (user.type) {
-            case "Admin": navigate("/adminhome"); break;
-            case "Renter": navigate("/renterhome"); break;
+            case "Admin": navigate("/admin/home"); break;
+            case "Renter": navigate("/renter/home"); break;
             case "Owner":
               if (user.granted === "ungranted") {
                 showToast("error", "Your account is not yet confirmed by the admin");
               } else {
-                navigate("/ownerhome");
+                navigate("/owner/home");
               }
               break;
             default: navigate("/login"); break;
@@ -72,12 +73,19 @@ const Login = () => {
 
   const handleRegSubmit = async (e) => {
     e.preventDefault();
-    if (!regData.name || !regData.email || !regData.password || !regData.type) {
+    if (!regData.name || !regData.email || !regData.password || !regData.confirmPassword || !regData.type) {
       return showToast("error", "Please fill all fields");
     }
+    if (regData.password !== regData.confirmPassword) {
+      return showToast("error", "Passwords do not match");
+    }
     try {
-      const response = await axios.post("https://rentease-d3zn.onrender.com/api/user/register", regData, { withCredentials: true });
-      if (response.data.success) {
+      const response = await axios.post(`${API_ENDPOINTS.USER_REGISTER}`, { 
+        name: regData.name,
+        email: regData.email,
+        password: regData.password,
+        type: regData.type
+      }, { withCredentials: true });
         showToast("success", response.data.message);
         setTimeout(() => setToggled(false), 1000);
       } else {

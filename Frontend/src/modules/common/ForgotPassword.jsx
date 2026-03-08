@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toast from "../common/Toast";
+import API_ENDPOINTS from "../../config/apiConfig";
 
 axios.defaults.withCredentials = true;
 
@@ -32,7 +33,7 @@ const ForgotPassword = () => {
 
     try {
       const res = await axios.post(
-        "https://rentease-d3zn.onrender.com/api/user/forgotpassword",
+        API_ENDPOINTS.USER_FORGOT_PASSWORD,
         data,
         { withCredentials: true }
       );

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Toast from "../common/Toast";
+import API_ENDPOINTS from "../../config/apiConfig";
 
 
 const AllPropertiesCards = ({ loggedIn }) => {
@@ -20,7 +21,7 @@ const AllPropertiesCards = ({ loggedIn }) => {
   const getAllProperties = async () => {
     try {
       const res = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/user/getAllProperties",
+        API_ENDPOINTS.USER_GET_ALL_PROPERTIES,
         { withCredentials: true }
       );
       setAllProperties(res.data.data);
@@ -32,20 +33,20 @@ const AllPropertiesCards = ({ loggedIn }) => {
   const handleBooking = async (status, propertyId, ownerId) => {
     try {
       const res = await axios.post(
-        `https://rentease-d3zn.onrender.com/api/user/bookinghandle/${propertyId}`,
-        { userDetails, status, ownerId },
+        API_ENDPOINTS.USER_BOOKING_HANDLE(propertyId),
+        { userDetails, status, ownerId, userId: JSON.parse(localStorage.getItem("user"))?._id },
         { withCredentials: true }
       );
 
       if (res.data.success) {
-        showToast(res.data.message);
+        showToast("success", res.data.message);
         setShowModal(false);
       } else {
-        showToast(res.data.message);
+        showToast("error", res.data.message);
       }
     } catch (error) {
       console.log(error);
-      showToast("Booking failed");
+      showToast("error", "Booking failed");
     }
   };
 

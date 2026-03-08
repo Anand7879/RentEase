@@ -7,8 +7,6 @@ const getAllUsersController = async (req, res) => {
   try {
     const allUsers = await userSchema.find({});
 
-    // FIX 1: find({}) NEVER returns null — it returns [] when empty
-    // The null check was wrong and would never trigger
     return res.status(200).send({
       success: true,
       message: "All users",
@@ -16,7 +14,6 @@ const getAllUsersController = async (req, res) => {
     });
   } catch (error) {
     console.log("GetAllUsers error:", error);
-    // FIX 2: catch block had no res.send() — server would hang with no response
     return res.status(500).send({ success: false, message: error.message });
   }
 };

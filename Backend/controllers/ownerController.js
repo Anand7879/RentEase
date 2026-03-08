@@ -5,13 +5,28 @@ const bookingSchema = require("../models/BookingSchema");
 //////////adding property by owner////////
 const addPropertyController = async (req, res) => {
   try {
+    const { propertyType, propertyAdType, propertyAddress, ownerContact, propertyAmt } = req.body;
+
+    // Validate required fields
+    if (!propertyType || !propertyAdType || !propertyAddress || !ownerContact || !propertyAmt) {
+      return res.status(400).send({ 
+        success: false, 
+        message: "Please provide all required property details" 
+      });
+    }
+
+    if (!req.body.userId) {
+      return res.status(400).send({ 
+        success: false, 
+        message: "User ID is required" 
+      });
+    }
+
     let images = [];
-    if (req.files && req.files.length > 0) {
-      // Cloudinary returns secure_url and public_id instead of local path
-      images = req.files.map((file) => ({
-        filename: file.filename,
-        path: file.path,           // ← Cloudinary secure_url
-        public_id: file.filename,  // ← Cloudinary public_id
+    if (req.cloudinaryFiles && req.cloudinaryFiles.length > 0) {
+      images = req.cloudinaryFiles.map((file) => ({
+        filename: file.public_id,
+        path: file.secure_url,
       }));
     }
 
@@ -29,8 +44,7 @@ const addPropertyController = async (req, res) => {
     });
 
     await newPropertyData.save();
-
-    return res.status(200).send({ success: true, message: "New Property has been stored" });
+    return res.status(201).send({ success: true, message: "Property added successfully" });
   } catch (error) {
     console.log("AddProperty error:", error);
     return res.status(500).send({ success: false, message: error.message });
@@ -77,12 +91,11 @@ const updatePropertyController = async (req, res) => {
 
     const updateData = { ...req.body, ownerId: req.body.userId };
 
-    // Agar nai image upload ki hai toh Cloudinary path use karo
-    if (req.file) {
+    // Agar nai image upload ki hai toh Cloudinary URL use karo
+    if (req.cloudinaryFile) {
       updateData.propertyImage = [{
-        filename: req.file.filename,
-        path: req.file.path,       // ← Cloudinary secure_url
-        public_id: req.file.filename,
+        filename: req.cloudinaryFile.public_id,
+        path: req.cloudinaryFile.secure_url,
       }];
     }
 
@@ -99,7 +112,7 @@ const updatePropertyController = async (req, res) => {
     return res.status(200).send({ success: true, message: "Property updated successfully." });
   } catch (error) {
     console.error("UpdateProperty error:", error);
-    return res.status(500).json({ success: false, message: "Failed to update property." });
+    return res.status(500).send({ success: false, message: "Failed to update property." });
   }
 };
 

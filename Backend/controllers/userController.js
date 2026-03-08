@@ -16,7 +16,7 @@ const registerController = async (req, res) => {
 
     const existsUser = await userSchema.findOne({ email });
     if (existsUser) {
-      return res.status(200).send({ message: "User already exists", success: false });
+      return res.status(409).send({ message: "User already exists", success: false });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -54,12 +54,12 @@ const loginController = async (req, res) => {
 
     const user = await userSchema.findOne({ email });
     if (!user) {
-      return res.status(200).send({ message: "User not found", success: false });
+      return res.status(401).send({ message: "Invalid email or password", success: false });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(200).send({ message: "Invalid email or password", success: false });
+      return res.status(401).send({ message: "Invalid email or password", success: false });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
@@ -72,11 +72,11 @@ const loginController = async (req, res) => {
     delete userObj.password;
 
     res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,        // ← hamesha true
-  sameSite: "none",    // ← "strict" se "none" karo
-  maxAge: 24 * 60 * 60 * 1000,
-});
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
     return res.status(200).send({
       message: "Login successful",
@@ -131,7 +131,7 @@ const authController = async (req, res) => {
   try {
     const user = await userSchema.findById(req.body.userId);
     if (!user) {
-      return res.status(200).send({ message: "User not found", success: false });
+      return res.status(404).send({ message: "User not found", success: false });
     }
 
     // FIX 10: was sending password in auth response — use toObject + delete
