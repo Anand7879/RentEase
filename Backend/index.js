@@ -18,7 +18,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ← Preflight requests handle karo
+app.options("/(.*)", cors(corsOptions)); // ← Preflight requests handle karo
 
 app.use(express.json());
 app.use(cookieParser());
