@@ -1,5 +1,16 @@
-const dotenv = require("dotenv");
-dotenv.config();
+// ✅ FIX: dotenv v17 changed API — use { path } option explicitly
+// and validate required env vars before anything else starts
+require("dotenv").config({ path: require("path").resolve(__dirname, ".env") });
+
+// ✅ Guard: crash early with a clear message if critical env vars are missing
+const REQUIRED_ENV = ["MONGO_DB", "JWT_KEY", "CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET"];
+const missingEnv = REQUIRED_ENV.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error("❌ Missing required environment variables:", missingEnv.join(", "));
+  console.error("Make sure your .env file exists and contains these keys.");
+  process.exit(1);
+}
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
