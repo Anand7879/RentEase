@@ -10,7 +10,6 @@ const app = express();
 
 const PORT = process.env.PORT || 8001;
 
-// ✅ CORS Configuration - Allows all development & production domains
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
@@ -21,8 +20,7 @@ const corsOptions = {
       "https://hunthouse.netlify.app",
       "https://rentease-d3zn.onrender.com",
     ];
-    
-    // Allow requests with no origin (like mobile apps or curl requests)
+
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -39,21 +37,18 @@ const corsOptions = {
   ],
   exposedHeaders: ["Content-Length", "X-JSON-Response"],
   credentials: true,
-  optionsSuccessStatus: 200, // For legacy browsers
-  preflightContinue: true,
+  optionsSuccessStatus: 200,
+  preflightContinue: false, // ✅ FIX 1: was true — this caused preflight to never respond
 };
 
-// ✅ Apply CORS middleware
-app.use(cors(corsOptions));
-
-// ✅ Handle preflight requests explicitly
+// ✅ Handle preflight OPTIONS first, before any other middleware
 app.options("*", cors(corsOptions));
 
-app.use(express.json());
-app.use(cookieParser());
+// ✅ Apply CORS to all routes
+app.use(cors(corsOptions));
 
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser()); // ✅ FIX 2: removed duplicate express.json() and cookieParser()
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/user", require("./routes/userRoutes.js"));

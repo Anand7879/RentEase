@@ -7,26 +7,28 @@ const addPropertyController = async (req, res) => {
   try {
     const { propertyType, propertyAdType, propertyAddress, ownerContact, propertyAmt } = req.body;
 
-    // Validate required fields
     if (!propertyType || !propertyAdType || !propertyAddress || !ownerContact || !propertyAmt) {
-      return res.status(400).send({ 
-        success: false, 
-        message: "Please provide all required property details" 
+      return res.status(400).send({
+        success: false,
+        message: "Please provide all required property details",
       });
     }
 
     if (!req.body.userId) {
-      return res.status(400).send({ 
-        success: false, 
-        message: "User ID is required" 
+      return res.status(400).send({
+        success: false,
+        message: "User ID is required",
       });
     }
 
+    // ✅ FIX 6: was reading req.cloudinaryFiles which doesn't exist.
+    //           multer-storage-cloudinary puts uploaded files in req.files,
+    //           each file has .path (secure URL) and .filename (public_id).
     let images = [];
-    if (req.cloudinaryFiles && req.cloudinaryFiles.length > 0) {
-      images = req.cloudinaryFiles.map((file) => ({
-        filename: file.public_id,
-        path: file.secure_url,
+    if (req.files && req.files.length > 0) {
+      images = req.files.map((file) => ({
+        filename: file.filename,   // public_id set by multer-storage-cloudinary
+        path: file.path,           // secure_url set by multer-storage-cloudinary
       }));
     }
 
@@ -91,11 +93,12 @@ const updatePropertyController = async (req, res) => {
 
     const updateData = { ...req.body, ownerId: req.body.userId };
 
-    // Agar nai image upload ki hai toh Cloudinary URL use karo
-    if (req.cloudinaryFile) {
+    // ✅ FIX 7: was reading req.cloudinaryFile (singular, wrong property).
+    //           For upload.single(), multer-storage-cloudinary uses req.file.
+    if (req.file) {
       updateData.propertyImage = [{
-        filename: req.cloudinaryFile.public_id,
-        path: req.cloudinaryFile.secure_url,
+        filename: req.file.filename,
+        path: req.file.path,
       }];
     }
 

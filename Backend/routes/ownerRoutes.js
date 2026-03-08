@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const CloudinaryStorage = require("multer-storage-cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary"); // ✅ FIX 3: correct named import
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const {
   addPropertyController,
@@ -32,10 +32,21 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
+// ✅ FIX 4: authMiddleware runs BEFORE upload so unauthenticated requests
+//           are rejected immediately without wasting Cloudinary bandwidth.
+//           multer error handler added so upload failures return JSON, not a crash.
 router.post(
   "/postproperty",
-  upload.array("propertyImages"),
   authMiddleware,
+  (req, res, next) => {
+    upload.array("propertyImages")(req, res, (err) => {
+      if (err) {
+        console.error("Multer/Cloudinary upload error:", err);
+        return res.status(400).json({ success: false, message: "Image upload failed: " + err.message });
+      }
+      next();
+    });
+  },
   addPropertyController
 );
 
@@ -49,10 +60,19 @@ router.delete(
   deletePropertyController
 );
 
+// ✅ FIX 5: same wrapped upload pattern for update route
 router.patch(
   "/updateproperty/:propertyid",
-  upload.single("propertyImage"),
   authMiddleware,
+  (req, res, next) => {
+    upload.single("propertyImage")(req, res, (err) => {
+      if (err) {
+        console.error("Multer/Cloudinary upload error:", err);
+        return res.status(400).json({ success: false, message: "Image upload failed: " + err.message });
+      }
+      next();
+    });
+  },
   updatePropertyController
 );
 
