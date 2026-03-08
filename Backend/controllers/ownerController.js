@@ -5,6 +5,12 @@ const bookingSchema = require("../models/BookingSchema");
 //////////adding property by owner////////
 const addPropertyController = async (req, res) => {
   try {
+    // ✅ FIX: When multer processes multipart/form-data, req.body is populated by multer.
+    //         authMiddleware sets req.body.userId BEFORE multer runs (since we reordered),
+    //         but multer rebuilds req.body from form fields — so userId from JWT is lost.
+    //         Solution: authMiddleware now also sets req.userId so it survives multer.
+    const userId = req.userId || req.body.userId;
+
     const { propertyType, propertyAdType, propertyAddress, ownerContact, propertyAmt } = req.body;
 
     if (!propertyType || !propertyAdType || !propertyAddress || !ownerContact || !propertyAmt) {
@@ -14,25 +20,22 @@ const addPropertyController = async (req, res) => {
       });
     }
 
-    if (!req.body.userId) {
+    if (!userId) {
       return res.status(400).send({
         success: false,
-        message: "User ID is required",
+        message: "User ID is required — please login again",
       });
     }
 
-    // ✅ FIX 6: was reading req.cloudinaryFiles which doesn't exist.
-    //           multer-storage-cloudinary puts uploaded files in req.files,
-    //           each file has .path (secure URL) and .filename (public_id).
     let images = [];
     if (req.files && req.files.length > 0) {
       images = req.files.map((file) => ({
-        filename: file.filename,   // public_id set by multer-storage-cloudinary
-        path: file.path,           // secure_url set by multer-storage-cloudinary
+        filename: file.filename,
+        path: file.path,
       }));
     }
 
-    const user = await userSchema.findById(req.body.userId);
+    const user = await userSchema.findById(userId);
     if (!user) {
       return res.status(404).send({ success: false, message: "Owner user not found" });
     }
