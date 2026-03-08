@@ -86,6 +86,7 @@ const Login = () => {
         password: regData.password,
         type: regData.type
       }, { withCredentials: true });
+      if (response.data.success) {
         showToast("success", response.data.message);
         setTimeout(() => setToggled(false), 1000);
       } else {
