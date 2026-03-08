@@ -17,7 +17,7 @@ const OwnerAllBookings = () => {
   const getAllProperty = async () => {
     try {
       const response = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/owner/getallbookings",
+        API_ENDPOINTS.OWNER_GET_ALL_BOOKINGS,
         { withCredentials: true }
       );
       if (response.data.success) {

@@ -22,8 +22,8 @@ const AllUsers = () => {
   const getAllUser = async () => {
     try {
       const response = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/admin/getallusers",
-        { withCredentials: true }  // ← Fix 1: added
+        API_ENDPOINTS.ADMIN_GET_ALL_USERS,
+        { withCredentials: true }
       );
       if (response.data.success) {
         setAllUser(response.data.data);

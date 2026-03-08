@@ -37,7 +37,7 @@ const OwnerAllProperties = () => {
   const getAllProperty = async () => {
     try {
       const response = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/owner/getallproperties",
+        API_ENDPOINTS.OWNER_GET_ALL_PROPERTIES,
         { withCredentials: true }
       );
       if (response.data.success) {
@@ -80,7 +80,7 @@ const OwnerAllProperties = () => {
       formData.append("isAvailable", status);
 
       const res = await axios.patch(
-        `https://rentease-d3zn.onrender.com/api/owner/updateproperty/${propertyId}`,
+        API_ENDPOINTS.OWNER_UPDATE_PROPERTY(propertyId),
         formData,
         { withCredentials: true }
       );
@@ -108,7 +108,7 @@ const OwnerAllProperties = () => {
     if (window.confirm("Are you sure to delete?")) {
       try {
         const response = await axios.delete(
-          `https://rentease-d3zn.onrender.com/api/owner/deleteproperty/${propertyId}`,
+          API_ENDPOINTS.OWNER_DELETE_PROPERTY(propertyId),
           { withCredentials: true }
         );
         if (response.data.success) {

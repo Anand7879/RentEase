@@ -4,6 +4,7 @@ import Toast from "../../common/Toast"
 import { useNavigate } from "react-router-dom";
 import API_ENDPOINTS from "../../../config/apiConfig";
 
+// ✅ Configure axios for CORS and proper file handling
 axios.defaults.withCredentials = true;
 
 function AddProperty() {

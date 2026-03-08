@@ -1,5 +1,14 @@
 // API Base Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://rentease-d3zn.onrender.com";
+// Uses environment variable, no fallback to avoid CORS issues
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  console.error(
+    "FATAL: VITE_API_BASE_URL not set in .env file.\n" +
+    "Please create a .env file in Frontend folder with:\n" +
+    "VITE_API_BASE_URL=http://localhost:8001 (local) or https://your-backend.com (production)"
+  );
+}
 
 // API Endpoints
 const API_ENDPOINTS = {

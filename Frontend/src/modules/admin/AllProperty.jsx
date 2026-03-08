@@ -18,7 +18,7 @@ const AdminAllProperty = () => {
   const getAllProperty = async () => {
     try {
       const response = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/admin/getallproperties",
+        API_ENDPOINTS.ADMIN_GET_ALL_PROPERTIES,
         { withCredentials: true }
       );
 

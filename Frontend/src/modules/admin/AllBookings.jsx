@@ -18,7 +18,7 @@ const AdminAllBookings = () => {
   const getAllBooking = async () => {
     try {
       const response = await axios.get(
-        "https://rentease-d3zn.onrender.com/api/admin/getallbookings",
+        API_ENDPOINTS.ADMIN_GET_ALL_BOOKINGS,
         { withCredentials: true }
       );
 
